@@ -1,0 +1,72 @@
+@page "/ticket"
+@page "/ticket/{id:int}"
+@inject ITicketService TicketService
+
+@if( id == null )
+{
+    <PageTitle>Create Ticket</PageTitle>
+    <h3>Create Ticket</h3>
+}
+else
+{
+    <PageTitle>Edit @ticket.Name</PageTitle>
+    <h3>Edit @ticket.Name</h3>
+}
+
+<EditForm Model="ticket" OnSubmit="HandleSubmit">
+    <div>
+        <label for="name">Name</label>
+        <InputText id="name" @bind-Value="ticket.Name" class="form-control"></InputText>
+    </div>
+    <div>
+        <label for="start">Start</label>
+        <InputText id="start" @bind-Value="ticket.start" class="form-control"></InputText>
+    </div>
+    <div>
+        <label for="destination">Destination</label>
+        <InputText id="destination" @bind-Value="ticket.destination" class="form-control"></InputText>
+    </div>
+    <div>
+        <label for="time">Time</label>
+        <InputText id="time" @bind-Value="ticket.time" class="form-control"></InputText>
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">@btnText</button>
+</EditForm>
+
+
+@code{
+    
+   [Parameter]
+   public int? id { get; set; } 
+
+   string btnText = string.Empty;
+
+   Ticket ticket = new Ticket();
+
+     protected override async Task OnInitializedAsync()
+    {
+        btnText = id == null ? "Save New Ticket" : "Update Ticket";
+    }
+
+    
+
+    protected override async Task OnParametersSetAsync()
+    {            
+        if ( id == null )
+        {
+            //create new ticket
+        }
+        else
+        {
+            ticket = await TicketService.GetSingleTicket((int)id); 
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        
+    }
+
+}
+
